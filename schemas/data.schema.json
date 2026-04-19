@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataCoverageExtraction",
+  "type": "object",
+  "required": ["doc_id", "index_type", "records", "extracted_at", "prompt_version"],
+  "properties": {
+    "doc_id": { "type": "string" },
+    "index_type": { "type": "string", "const": "data" },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dataset_role", "anchor", "verbatim_quote", "confidence"],
+        "properties": {
+          "dataset_role": {
+            "type": "string",
+            "enum": [
+              "development",
+              "in_sample",
+              "out_of_sample",
+              "out_of_time",
+              "monitoring",
+              "other"
+            ]
+          },
+          "period_start": { "type": ["string", "null"], "description": "ISO date or verbatim phrase" },
+          "period_end": { "type": ["string", "null"] },
+          "sample_size": { "type": ["integer", "null"] },
+          "sources": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "segments": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "exclusions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "target_definition": { "type": ["string", "null"] },
+          "anchor": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+#[a-z0-9-]+$"
+          },
+          "verbatim_quote": { "type": "string" },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "_quote_mismatch": { "type": "boolean" }
+        }
+      }
+    },
+    "extracted_at": { "type": "string", "format": "date" },
+    "prompt_version": { "type": "string" },
+    "error": { "type": "string" }
+  }
+}

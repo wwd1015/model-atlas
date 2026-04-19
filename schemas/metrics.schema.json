@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MetricsExtraction",
+  "type": "object",
+  "required": ["doc_id", "index_type", "records", "extracted_at", "prompt_version"],
+  "properties": {
+    "doc_id": { "type": "string" },
+    "index_type": { "type": "string", "const": "metrics" },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric", "value", "unit", "dataset", "anchor", "verbatim_quote", "confidence"],
+        "properties": {
+          "metric": {
+            "type": "string",
+            "description": "Canonical metric name: AUC, KS, Gini, R2, R2_adjusted, MAPE, RMSE, MAE, MSE, Accuracy, Precision, Recall, F1, HL, Brier, PSI, CSI, etc."
+          },
+          "value": { "type": "number" },
+          "unit": {
+            "type": "string",
+            "enum": ["ratio", "%", "bps", "count", "score", "other"]
+          },
+          "dataset": {
+            "type": "string",
+            "description": "Exact dataset label from source, e.g. 'OOT 2024', 'in-sample', 'OOS 2020-2022'"
+          },
+          "segment": {
+            "type": ["string", "null"],
+            "description": "Segment name if metric is segment-specific; null for portfolio-level"
+          },
+          "period": { "type": "string" },
+          "sample_size": { "type": ["integer", "null"] },
+          "anchor": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+#[a-z0-9-]+$"
+          },
+          "verbatim_quote": {
+            "type": "string",
+            "description": "Exact substring from source, ≤50 words. Audit trail."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "_quote_mismatch": {
+            "type": "boolean",
+            "description": "Set by runbook if verbatim_quote not found in source"
+          }
+        }
+      }
+    },
+    "extracted_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "prompt_version": { "type": "string" },
+    "error": { "type": "string" }
+  }
+}

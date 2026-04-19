@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Formula",
+  "type": "object",
+  "required": ["equation_id", "doc_id", "latex", "description", "confidence", "is_formula", "anchor"],
+  "properties": {
+    "equation_id": {
+      "type": "string",
+      "description": "Stable ID from docx-extract manifest, e.g. 'eq_001'"
+    },
+    "doc_id": {
+      "type": "string"
+    },
+    "latex": {
+      "type": "string",
+      "description": "LaTeX body without $ or $$ delimiters"
+    },
+    "description": {
+      "type": "string",
+      "description": "One-sentence plain-English description"
+    },
+    "variables": {
+      "type": "object",
+      "description": "Map of symbol to meaning. Null values allowed for unclear symbols.",
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "is_formula": {
+      "type": "boolean",
+      "description": "False for images that turned out to be charts, logos, diagrams."
+    },
+    "display_mode": {
+      "type": "string",
+      "enum": ["display", "inline"]
+    },
+    "anchor": {
+      "type": "string",
+      "description": "doc_id#section-anchor format",
+      "pattern": "^[a-z0-9_]+#[a-z0-9-]+$"
+    },
+    "error": {
+      "type": "string",
+      "description": "Present only when extraction failed. If set, other fields may be stubs."
+    }
+  }
+}

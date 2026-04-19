@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AssumptionsExtraction",
+  "type": "object",
+  "required": ["doc_id", "index_type", "records", "extracted_at", "prompt_version"],
+  "properties": {
+    "doc_id": { "type": "string" },
+    "index_type": { "type": "string", "const": "assumptions" },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["assumption_id", "category", "statement", "anchor", "verbatim_quote", "confidence"],
+        "properties": {
+          "assumption_id": {
+            "type": "string",
+            "description": "Per-doc sequential ID in order of appearance, e.g. 'A-001'"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "distributional",
+              "independence",
+              "stationarity",
+              "functional_form",
+              "segmentation",
+              "exclusion",
+              "missing_data",
+              "transformation",
+              "other"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "description": "One-sentence canonical restatement of the assumption"
+          },
+          "impact": {
+            "type": ["string", "null"],
+            "description": "One-sentence note on why it matters. Null if not derivable."
+          },
+          "anchor": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+#[a-z0-9-]+$"
+          },
+          "verbatim_quote": {
+            "type": "string",
+            "description": "Exact substring from source, ≤50 words."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "_quote_mismatch": { "type": "boolean" }
+        }
+      }
+    },
+    "extracted_at": { "type": "string", "format": "date" },
+    "prompt_version": { "type": "string" },
+    "error": { "type": "string" }
+  }
+}

@@ -1,0 +1,37 @@
+# Gem bundle configuration.
+#
+# Each entry in `bundles` becomes one Markdown file under
+# knowledge/gem_bundle/. Docs are assigned to the first bundle whose `match`
+# regex matches their doc_id. Always keep a catch-all (match: ".*") at the
+# end so new docs never silently fall off the ship.
+#
+# The `always_include_indexes` list copies each referenced file verbatim
+# into the bundle directory (one file per index) so the Gem gets the
+# indexes as their own knowledge files rather than folded into a content
+# bundle.
+
+bundles:
+  - name: credit_risk
+    label: "Credit Risk — PD / LGD / EAD models"
+    match: "^model_[abc]_"
+  - name: market_risk
+    label: "Market Risk models"
+    match: "^model_[de]_"
+  - name: operational
+    label: "Operational Risk and other"
+    match: ".*"  # catch-all — keep last
+
+always_include_indexes:
+  - master_toc.md
+  - formula_index.md
+  - indexes/metrics_index.md
+  # add other indexes here as they come online:
+  # - indexes/assumptions_index.md
+  # - indexes/data_index.md
+  # - indexes/governance_index.md
+  # - indexes/dependencies_index.md
+
+# Gem limits — verify before shipping; they move.
+gem_file_limit: 10
+max_bytes_per_file_warn: 400000
+max_bytes_per_file_hard: 1000000

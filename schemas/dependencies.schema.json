@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DependenciesExtraction",
+  "type": "object",
+  "required": ["doc_id", "index_type", "records", "extracted_at", "prompt_version"],
+  "properties": {
+    "doc_id": { "type": "string" },
+    "index_type": { "type": "string", "const": "dependencies" },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["direction", "passed_artifact", "hardness", "anchor", "verbatim_quote", "confidence"],
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": ["upstream", "downstream"]
+          },
+          "other_model_id": { "type": ["string", "null"] },
+          "other_model_name": { "type": "string" },
+          "passed_artifact": {
+            "type": "string",
+            "description": "What flows across the dependency, e.g. 'PD', 'LGD', 'rating', 'forecast'"
+          },
+          "hardness": {
+            "type": "string",
+            "enum": ["hard", "soft"]
+          },
+          "anchor": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+#[a-z0-9-]+$"
+          },
+          "verbatim_quote": { "type": "string" },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "_quote_mismatch": { "type": "boolean" }
+        }
+      }
+    },
+    "extracted_at": { "type": "string", "format": "date" },
+    "prompt_version": { "type": "string" },
+    "error": { "type": "string" }
+  }
+}
