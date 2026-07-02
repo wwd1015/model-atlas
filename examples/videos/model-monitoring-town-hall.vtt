@@ -1,0 +1,33 @@
+WEBVTT
+
+1
+00:00:02.000 --> 00:00:14.000
+Welcome everyone to the June model monitoring town hall. Today: the Q2 monitoring results, one change to how we report PSI, and a preview of the champion-challenger work on the CRE PD model.
+
+2
+00:00:15.000 --> 00:00:52.000
+First, Q2 results. All Tier 1 models finished green on calibration. The CRE PD model had one amber: PSI came in at zero point one four against the development sample, driven by a shift in the industrial segment mix.
+
+3
+00:00:53.000 --> 00:01:30.000
+Reminder on thresholds: PSI below zero point one zero is stable, zero point one zero to zero point two five means investigate and document, and above zero point two five escalates to the model owner the same day. Two consecutive ambers on the same metric escalate as red — that's new since the assumption drift lesson.
+
+4
+00:01:31.000 --> 00:02:05.000
+The reporting change: starting Q3, calibration ratio will be reported per segment, not just at portfolio level. Portfolio-level green can hide segment-level red — that is exactly what the 2024 vacancy assumption drift taught us.
+
+5
+00:02:06.000 --> 00:02:48.000
+On champion-challenger: the credit risk team is testing a gradient boosting challenger against the CRE PD champion on the same scoring population. Decision criteria are AUC uplift of at least two points and stable calibration across segments. Results at the September forum.
+
+6
+00:02:49.000 --> 00:03:20.000
+One compliance note before Q&A: monitoring extracts contain obligor-level data. Keep them inside the approved environment — aggregates only in the memos. If you're unsure whether a field is NPI, ask the data steward before you move it.
+
+7
+00:03:21.000 --> 00:03:55.000
+Q&A. Question: does the segment-level reporting apply to the VA hedging model too? Answer: yes for behavior drift — actual versus assumed lapse will be reported by cohort starting Q3. Hedge effectiveness stays at program level.
+
+8
+00:03:56.000 --> 00:04:10.000
+That's all — slides and this recording will be in Atlas. Next town hall is the last week of September.
