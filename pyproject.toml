@@ -1,7 +1,7 @@
 [project]
-name = "model-atlas"
-version = "0.1.0"
-description = "Offline pipeline that turns model whitepapers into a portable RAG knowledge pack (Gem today, Vertex AI / NotebookLM tomorrow)."
+name = "atlas"
+version = "0.2.0"
+description = "Atlas — a centralized knowledge hub (Dash UI + search/copilot engine) plus the offline pipeline that turns model whitepapers, decks, videos, and code into a portable OKF/Markdown knowledge pack."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -20,6 +20,16 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "ruff>=0.3",
+]
+hub = [
+    "dash>=3.0",
+    "dash-bootstrap-components>=2.0",
+]
+ingest = [
+    "python-pptx>=0.6.23",
+]
+e2e = [
+    "playwright>=1.40",
 ]
 
 [build-system]

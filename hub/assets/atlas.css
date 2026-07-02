@@ -1,0 +1,263 @@
+/* Atlas hub styling ------------------------------------------------------ */
+
+body {
+    background: #f7f8fa;
+}
+
+.page-container {
+    max-width: 1140px;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    min-height: 80vh;
+}
+
+/* Navbar */
+.atlas-navbar .nav-search {
+    width: 220px;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+}
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #1a5276, #2ecc71);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-tagline {
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+.hero-search {
+    max-width: 620px;
+    margin: 0 auto;
+    border-radius: 2rem;
+    padding-left: 1.25rem;
+    box-shadow: 0 2px 12px rgba(26, 82, 118, 0.12);
+}
+
+/* Cards */
+.channel-card,
+.doc-card {
+    border: 1px solid #e6e9ee;
+    border-radius: 0.75rem;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.channel-card:hover,
+.doc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.channel-icon {
+    font-size: 1.6rem;
+}
+.doc-card-title,
+.channel-card h5 a {
+    text-decoration: none;
+}
+.model-card table td {
+    padding-bottom: 0.15rem;
+}
+
+/* Page headers & breadcrumbs */
+.page-header {
+    padding: 1rem 0 0.75rem;
+    border-bottom: 1px solid #e6e9ee;
+    margin-bottom: 1.25rem;
+}
+.breadcrumbs a {
+    text-decoration: none;
+}
+
+/* Doc body */
+.doc-body {
+    font-size: 1rem;
+    line-height: 1.65;
+}
+.doc-section {
+    scroll-margin-top: 80px; /* room for the sticky navbar on anchor jumps */
+    margin-bottom: 1.25rem;
+}
+.section-heading .anchor-link {
+    visibility: hidden;
+    margin-left: 0.4rem;
+    font-size: 0.8em;
+    text-decoration: none;
+    color: #b0b7c3;
+}
+.section-heading:hover .anchor-link {
+    visibility: visible;
+}
+.atlas-md table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+}
+.atlas-md th,
+.atlas-md td {
+    border: 1px solid #e6e9ee;
+    padding: 0.4rem 0.6rem;
+}
+.atlas-md th {
+    background: #f0f3f7;
+}
+.atlas-md blockquote {
+    border-left: 4px solid #2ecc71;
+    background: #f2fbf6;
+    padding: 0.5rem 1rem;
+    color: #4a5568;
+}
+.atlas-md code {
+    background: #eef1f5;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+}
+
+/* Doc sidebar */
+.doc-sidebar {
+    position: sticky;
+    top: 84px;
+}
+.sidebar-panel {
+    background: #ffffff;
+    border: 1px solid #e6e9ee;
+    border-radius: 0.75rem;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1rem;
+}
+.sidebar-title {
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: #8a93a3;
+    margin-bottom: 0.5rem;
+}
+.toc-list,
+.plain-list,
+.start-list {
+    padding-left: 1.1rem;
+    margin-bottom: 0;
+}
+.toc-list li {
+    list-style: none;
+    margin-bottom: 0.2rem;
+}
+.toc-l3 {
+    padding-left: 0.9rem;
+}
+.toc-l4 {
+    padding-left: 1.8rem;
+}
+.toc-link {
+    text-decoration: none;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+.toc-link:hover {
+    color: #1a5276;
+}
+
+/* Model page */
+.model-facts .model-fact {
+    background: #ffffff;
+    border: 1px solid #e6e9ee;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+}
+.model-tabs {
+    margin-top: 0.5rem;
+}
+
+/* Search */
+.search-hit {
+    background: #ffffff;
+    border: 1px solid #e6e9ee;
+    border-radius: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.75rem;
+}
+.search-snippet p {
+    margin-bottom: 0;
+    color: #4a5568;
+    font-size: 0.92rem;
+}
+
+/* Badges */
+.channel-badge,
+.type-badge,
+.tag-chip {
+    text-decoration: none;
+    font-weight: 500;
+}
+.type-badge {
+    border: 1px solid #dfe3ea;
+}
+
+/* Copilot */
+.copilot-canvas {
+    width: 420px !important;
+    display: flex;
+    flex-direction: column;
+}
+.copilot-canvas .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+}
+.copilot-loading {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    margin-bottom: 0.75rem;
+}
+.copilot-messages {
+    min-height: 60px;
+}
+.copilot-mode-badge {
+    align-self: flex-start;
+    font-weight: 500;
+}
+.chat-bubble {
+    border-radius: 0.9rem;
+    padding: 0.6rem 0.85rem;
+    margin-bottom: 0.6rem;
+    max-width: 95%;
+    font-size: 0.92rem;
+}
+.chat-user {
+    background: #1a5276;
+    color: #fff;
+    margin-left: auto;
+}
+.chat-assistant {
+    background: #f0f3f7;
+    color: #212529;
+}
+.chat-md p:last-child {
+    margin-bottom: 0;
+}
+.cite-row {
+    margin-top: 0.4rem;
+}
+.cite-chip {
+    display: inline-block;
+    background: #ffffff;
+    border: 1px solid #dfe3ea;
+    border-radius: 1rem;
+    padding: 0.1rem 0.6rem;
+    margin: 0 0.25rem 0.25rem 0;
+    font-size: 0.78rem;
+    text-decoration: none;
+}
+.copilot-suggestions {
+    margin-bottom: 0.5rem;
+}
+.sugg-chip {
+    border-radius: 1rem;
+    font-size: 0.78rem;
+}
