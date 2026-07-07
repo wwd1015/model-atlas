@@ -1,5 +1,7 @@
 ---
 name: structured-index
+description: Rolls up per-doc structured extraction JSONs into cross-doc indexes — knowledge/indexes/{type}_index.md for the Gem plus a CSV for audit. Use when the user asks to build or regenerate a metrics/assumptions/data/governance/dependencies index, or all of them. Requires structured-extract outputs; for formulas use formula-index.
+argument-hint: "[metrics|assumptions|data|governance|dependencies|all]"
 type: deterministic
 ---
 

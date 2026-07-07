@@ -1,5 +1,6 @@
 ---
 name: md-normalize
+description: Stitches OCR'd LaTeX back into extracted Markdown skeletons, adds OKF frontmatter, normalizes headings and section anchors, and writes final per-doc Markdown to knowledge/docs/. Use when the user asks to normalize docs or produce final Markdown (e.g. "normalize the pilot doc", "re-stitch after re-OCR"). Requires docx-extract and formula-ocr outputs; runs before indexing and bundling.
 type: deterministic
 ---
 

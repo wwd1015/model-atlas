@@ -1,5 +1,6 @@
 ---
 name: knowledge-hub
+description: Operates the Atlas hub app — serve it locally, validate the OKF content bundle (frontmatter and type checks), and sanity-check search after content changes. Use when the user asks to run/start the hub, validate content, or debug why a page is not showing up. Not for authoring content or Gem bundling.
 type: deterministic
 ---
 

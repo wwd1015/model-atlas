@@ -1,5 +1,7 @@
 ---
 name: structured-extract
+description: Extracts structured records (metrics, assumptions, data coverage, governance, dependencies) with verbatim quotes from normalized docs in knowledge/docs/, via the prepare/execute runbook pattern. Use when the user asks to extract one of the five index types for some or all docs, or to re-extract after a prompt change. Runs after md-normalize; for the cross-doc rollup use structured-index.
+argument-hint: "[metrics|assumptions|data|governance|dependencies] [doc_id|all]"
 type: llm-runbook
 ---
 

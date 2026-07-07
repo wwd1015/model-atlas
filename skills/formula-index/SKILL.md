@@ -1,5 +1,6 @@
 ---
 name: formula-index
+description: Builds knowledge/formula_index.md — the cross-doc index of every formula with source doc, anchor, LaTeX, description, and variables. Use when the user asks to build or regenerate the formula index, or to list all formulas across models. Requires formula OCR outputs. For metrics/assumptions/data/governance/dependencies rollups use structured-index instead.
 type: deterministic
 ---
 

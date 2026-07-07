@@ -1,5 +1,6 @@
 ---
 name: video-ingest
+description: Turns recorded videos with transcripts (trainings, walkthroughs, town halls) into OKF markdown concepts for the hub, via the prepare/execute runbook pattern. Use when the user asks to ingest videos from raw/videos or turn a recording/transcript into a hub page. Requires a transcript (.vtt/.srt/.txt or embedded subtitles) — no speech-to-text service, no external APIs.
 type: llm-runbook
 ---
 

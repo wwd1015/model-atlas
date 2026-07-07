@@ -23,6 +23,8 @@ Every pipeline step is a **skill** under `skills/`, not a standalone script. Ski
 
 The runbook pattern is non-negotiable for LLM work. **Don't** reach for the `anthropic` SDK or an external API — that's not this pipeline's model.
 
+Skill folders follow the [Agent Skills](https://agentskills.io/specification) conventions (see `skills/README.md`): frontmatter `name` matches the folder, `description` states what the skill does *and* when to use it (that field is what triggers the skill), and `.claude/skills/` holds one discovery symlink per skill so Claude Code loads them natively. New skills start from `skills/_template/`; `tests/test_skills_structure.py` enforces the whole contract.
+
 ## File taxonomy
 
 | Path | What it is | Who writes it | Committed? |
@@ -49,7 +51,7 @@ The runbook pattern is non-negotiable for LLM work. **Don't** reach for the `ant
 - Preserve the anchor format `doc_id#section-slug`. Citations across the hub, Gem, Vertex, and NotebookLM all rely on it.
 - Preserve the `verbatim_quote` field in every structured extraction. It is the audit trail; without it, the index is not defensible in a regulated review.
 - Use `knowledge/docs/` as the source of truth for whitepapers. In `content/models/`, keep `model_id` frontmatter matching the pipeline `doc_id` so whitepapers attach to their model space automatically.
-- Run `pytest tests/test_hub_engine.py` after touching `hub/` or `content/`.
+- Run `pytest tests/test_hub_engine.py` after touching `hub/` or `content/`, and `pytest tests/test_skills_structure.py` after touching `skills/` (frontmatter contract, shape files, discovery symlinks).
 
 **Don't**
 
@@ -75,7 +77,7 @@ The runbook pattern is non-negotiable for LLM work. **Don't** reach for the `ant
 
 - Hub won't show new content? Restart the app (corpus loads at startup); if still missing, `python skills/knowledge-hub/helper.py validate` — unparseable frontmatter is skipped.
 - Search returning junk / copilot answering weakly? Ranking lives in `hub/engine/search.py` (BM25 weights, query stopwords) and the coverage gate in `hub/engine/copilot.py`.
-- Skill triggers not firing? Rewrite the "When to use" block in the skill's `SKILL.md`.
+- Skill triggers not firing? Rewrite the `description` frontmatter in the skill's `SKILL.md` — that's the only text Claude sees before deciding to load it. The body's "When to use" block guides behavior *after* it loads.
 - LLM step producing bad output? Edit the prompt under the skill's `runbook_template.md` or `skills/structured-extract/prompts/{type}.md`, bump `prompt_version`, re-run.
 - Session drops mid-runbook? Resumability is built in — re-issue "execute the runbook." Entries with valid existing output are skipped.
 - Schema validation failing? Schemas live under `schemas/` — read the inline descriptions before relaxing anything.

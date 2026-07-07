@@ -43,7 +43,8 @@ atlas/
 │   ├── indexes/              # cross-doc structured indexes (.md + .csv)
 │   └── gem_bundle/           # Gem-ready consolidated files (≤10)
 ├── schemas/        # JSON schemas for structured extraction types
-├── skills/         # pipeline logic — every step is a SKILL.md + helper
+├── skills/         # pipeline logic — every step is a SKILL.md + helper (see skills/README.md)
+│   ├── _template/            # starter skeletons for new skills (Type A / Type B)
 │   ├── docx-extract/         # whitepaper → skeleton + manifest
 │   ├── formula-ocr/          # runbook: formula images → LaTeX
 │   ├── md-normalize/         # skeleton + formulas → knowledge/docs/*.md
@@ -56,6 +57,7 @@ atlas/
 │   ├── deck-ingest/          # runbook: pptx → OKF concept
 │   ├── code-ingest/          # runbook: code repo → OKF Tool entry
 │   └── knowledge-hub/        # run the hub, validate the OKF bundle
+├── .claude/skills/ # discovery symlinks → skills/* so Claude Code loads them natively
 ├── tests/          # engine + bundle contract tests (CI) and pipeline checks
 └── docs/           # long-form build guidance
 ```
@@ -75,7 +77,7 @@ You: Document the pricing-toolkit repo in the hub.
 You: Validate the bundle and start the hub.
 ```
 
-Each request triggers the matching skill's `SKILL.md`. LLM steps (OCR, extraction, video/deck/code synthesis) run inside Claude Code — resumable, no external API.
+Each request triggers the matching skill's `SKILL.md` (skills follow the [Agent Skills](https://agentskills.io) standard and are discoverable via `.claude/skills/`, so `/docx-extract`-style direct invocation works too). LLM steps (OCR, extraction, video/deck/code synthesis) run inside Claude Code — resumable, no external API.
 
 ## Execution order (new-repo checklist)
 

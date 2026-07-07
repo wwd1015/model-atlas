@@ -1,5 +1,6 @@
 ---
 name: bundle-for-gem
+description: Consolidates knowledge/docs/ and knowledge/indexes/ into Gem-ready bundle files under knowledge/gem_bundle/, respecting the Gem file-count and size limits, with per-bundle tables of contents. Use when the user asks to bundle for the Gem or check bundle sizes. Gem-specific only — Vertex AI and NotebookLM consume knowledge/ directly.
 type: deterministic
 ---
 

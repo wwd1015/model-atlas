@@ -1,5 +1,6 @@
 ---
 name: docx-extract
+description: Converts Word (.docx) whitepapers into Markdown skeletons with equation placeholder tokens, extracted embedded images, and a per-doc equation manifest for downstream OCR. Use when the user asks to extract or re-extract whitepapers from raw/ (e.g. "extract the pilot doc", "process all whitepapers"). First step of the docx pipeline. Not for PDFs, final cleaned Markdown (md-normalize), or formula OCR (formula-ocr).
 type: deterministic
 ---
 

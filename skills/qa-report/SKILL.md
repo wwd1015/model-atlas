@@ -1,5 +1,7 @@
 ---
 name: qa-report
+description: Generates side-by-side HTML review reports for formula OCR and structured extraction — the human quality gate before shipping a knowledge pack. Use when the user asks to QA or review OCR/extraction results, and always before a production release. Requires formula-ocr or structured-extract outputs.
+argument-hint: "[formula|structured] [doc_id]"
 type: deterministic
 ---
 

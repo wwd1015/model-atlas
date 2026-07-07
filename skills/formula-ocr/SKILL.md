@@ -1,5 +1,6 @@
 ---
 name: formula-ocr
+description: Converts formula images to LaTeX JSON records using Claude Code's own vision, via the prepare/execute runbook pattern with resumability. Use when the user asks to prepare or execute the formula OCR runbook, or to (re-)run formula OCR for one or more docs. Requires manifests from docx-extract; runs before md-normalize. No external API calls.
 type: llm-runbook
 ---
 

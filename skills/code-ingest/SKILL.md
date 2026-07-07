@@ -1,5 +1,7 @@
 ---
 name: code-ingest
+description: Turns a code repository or tool into an OKF Tool concept for the hub's tooling channel — what it does, how to run it, architecture, gotchas — via the prepare/execute runbook pattern. Use when the user asks to document a repo, script folder, or dashboard in Atlas. Produces a catalog page, not full API documentation.
+argument-hint: "[--repo path] [--name display-name]"
 type: llm-runbook
 ---
 

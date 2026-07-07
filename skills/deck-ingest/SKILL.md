@@ -1,5 +1,6 @@
 ---
 name: deck-ingest
+description: Turns PowerPoint decks into OKF markdown concepts for the hub via the prepare/execute runbook pattern (python-pptx extracts slides and notes deterministically; Claude Code synthesizes the concept). Use when the user asks to ingest decks from raw/decks or turn a pptx into a hub page. Word whitepapers go through docx-extract instead.
 type: llm-runbook
 ---
 
