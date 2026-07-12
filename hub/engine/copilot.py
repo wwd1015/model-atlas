@@ -6,11 +6,14 @@ compose a grounded answer where every claim links to its source anchor
 (`/doc/<id>#<anchor>`). That keeps the assistant honest in a regulated
 setting — it navigates you to the source rather than paraphrasing it.
 
-An optional LLM adapter can be plugged in at deploy time via the
-``ATLAS_COPILOT_ADAPTER`` env var ("package.module:factory"). The adapter
-receives the question + retrieved passages and returns synthesized text;
-citations still come from retrieval. This repo ships **no** adapter
-implementation, no SDK imports, and no key handling — by design.
+Synthesis is pluggable — any backend works, but citations always come from
+retrieval. Two adapters ship in-repo: the **Claude Code CLI** (headless
+``claude -p``, the default whenever the CLI is installed — ideal for local
+testing, no keys) and a **generic OpenAI-compatible HTTP adapter**
+(`http_adapter.py`, stdlib-only, activated by ``ATLAS_LLM_BASE_URL``) so any
+hosted LLM or enterprise gateway works via env config. Anything else can be
+plugged in via ``ATLAS_COPILOT_ADAPTER="package.module:factory"``. Keys are
+deploy-time env vars only — never repo code.
 """
 
 from __future__ import annotations
@@ -31,8 +34,9 @@ _WORD_RE = re.compile(r"[A-Za-z0-9_]+")
 
 class LLMAdapter(Protocol):
     """Synthesis backend. Ships with a Claude Code CLI implementation
-    (`claude_adapter.ClaudeCodeAdapter`); an enterprise gateway can be plugged
-    in via ATLAS_COPILOT_ADAPTER instead."""
+    (`claude_adapter.ClaudeCodeAdapter`) and a generic OpenAI-compatible one
+    (`http_adapter.OpenAICompatAdapter`); anything else can be plugged in via
+    ATLAS_COPILOT_ADAPTER."""
 
     def generate(self, question: str, passages: list[dict],
                  history: list[tuple[str, str]] | None = None) -> str: ...
@@ -65,8 +69,10 @@ def load_adapter() -> LLMAdapter | None:
     """Pick the synthesis backend.
 
     Precedence: ATLAS_COPILOT_ADAPTER (custom "module:factory") →
-    ATLAS_COPILOT env ("claude" force / "extractive"|"off" force-off) →
-    auto: use the local Claude Code CLI when installed, else extractive.
+    ATLAS_COPILOT env ("claude"/"api" force / "extractive"|"off" force-off) →
+    auto: OpenAI-compatible API when ATLAS_LLM_BASE_URL is configured, else
+    the local Claude Code CLI when installed (the testing default), else
+    extractive.
     """
     spec = config.COPILOT_ADAPTER.strip()
     if spec and ":" in spec:
@@ -77,14 +83,18 @@ def load_adapter() -> LLMAdapter | None:
         except Exception:
             return None  # misconfigured adapter must never take the hub down
 
+    from hub.engine import http_adapter
     from hub.engine.claude_adapter import ClaudeCodeAdapter, cli_available
 
     mode = os.environ.get("ATLAS_COPILOT", "auto").strip().lower()
     if mode in ("extractive", "off", "none"):
         return None
-    if mode == "claude" or (mode == "auto" and cli_available()):
-        if cli_available():
-            return ClaudeCodeAdapter(cwd=str(config.ROOT))
+    if mode == "api":
+        return http_adapter.OpenAICompatAdapter() if http_adapter.configured() else None
+    if mode == "auto" and http_adapter.configured():
+        return http_adapter.OpenAICompatAdapter()
+    if mode in ("claude", "auto") and cli_available():
+        return ClaudeCodeAdapter(cwd=str(config.ROOT))
     return None
 
 
@@ -134,7 +144,7 @@ class Copilot:
         )
         models = ", ".join(f"[{m.name}]({m.url})" for m in self.corpus.models.values())
         backend = (
-            f"_Answers are written by **{self.mode}** (your local Claude), grounded in hub "
+            f"_Answers are written by **{self.mode}**, grounded in hub "
             "content — each claim links to its source._"
             if self.adapter is not None
             else "_Running in offline extractive mode — answers quote hub content directly, "

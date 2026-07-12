@@ -9,7 +9,7 @@ This file is loaded automatically by Claude Code at the repo root. It captures c
 - **Hub** (`hub/` + `content/`): a Dash app (local / Posit Connect) with channels for onboarding, models (whitepaper + user guide + monitoring plan per model space), compliance, lessons learned, and tooling. Full-text search (SQLite FTS5), TF-IDF + link-graph recommendations, and a grounded copilot sidebar — synthesized by the **local Claude Code CLI** when installed (headless `claude -p`, tools disallowed, retrieval passages only), offline-extractive otherwise. Content is a Google **OKF v0.1** bundle (markdown + YAML frontmatter, `type` required).
 - **Pipeline** (`skills/`): converts source material — Word whitepapers (formulas as images), slide decks, videos, code repos — into portable markdown/OKF knowledge. Outputs also feed a Gemini Gem / Vertex AI Search / NotebookLM.
 
-Claude Code (Enterprise) is the build tool. **No Anthropic SDK, no API keys.** The pipeline runs entirely inside Claude Code; the hub's copilot uses the user's own `claude` CLI as its synthesis backend (subprocess, no keys) with a self-contained extractive fallback. Dash UI callbacks for page-specific components MUST use pattern-matching IDs — a plain string ID missing from the current page silently kills its callback (this bit us twice).
+Claude Code (Enterprise) is the build tool. **No Anthropic SDK, no keys in the repo.** The pipeline runs entirely inside Claude Code. The hub's copilot picks its synthesis backend at startup: a custom `ATLAS_COPILOT_ADAPTER` if set, else the generic OpenAI-compatible HTTP adapter when `ATLAS_LLM_BASE_URL` is configured (stdlib-only, any LLM API, keys via deploy-time env only), else the user's own `claude` CLI headless (the local/testing default), else self-contained extractive answers. Dash UI callbacks for page-specific components MUST use pattern-matching IDs — a plain string ID missing from the current page silently kills its callback (this bit us twice).
 
 ## The mental model
 
@@ -55,7 +55,7 @@ Skill folders follow the [Agent Skills](https://agentskills.io/specification) co
 
 **Don't**
 
-- Don't add API key handling, `anthropic` SDK imports, or any code that calls a hosted model from Python. Claude Code is the executor; the copilot's optional LLM adapter is deploy-time config, not repo code.
+- Don't add vendor LLM SDKs (`anthropic`, `openai`, ...) or hardcoded keys/endpoints anywhere. The **pipeline** never calls a hosted model — Claude Code is its executor. The **hub copilot** may: only through `hub/engine/http_adapter.py` (stdlib `urllib`, OpenAI-compatible), with base URL / key / model coming exclusively from deploy-time env vars (`ATLAS_LLM_*`).
 - Don't use `pdftotext`, `docx2txt`, or any flattening extractor. They destroy structure.
 - Don't hand-edit files under `knowledge/`. Fix the source (raw docx / OCR prompt / skill) and re-run. (`content/` is different — it *is* hand-editable, via PR.)
 - Don't bake page numbers into locators — use section anchors.

@@ -1,6 +1,6 @@
 # Atlas hub — the app
 
-The team knowledge hub: Dash UI + local search/copilot engine over the OKF content bundle (`content/`) and pipeline whitepapers (`knowledge/docs/`). Runs locally or on Posit Connect. **No API keys, no external calls** — search and copilot are fully offline.
+The team knowledge hub: Dash UI + local search/copilot engine over the OKF content bundle (`content/`) and pipeline whitepapers (`knowledge/docs/`). Runs locally or on Posit Connect. **Offline by default, no keys in the repo** — search is fully local, and the copilot synthesizes with your local Claude Code CLI (or plain extractive answers); pointing it at a hosted LLM API is an opt-in env config.
 
 ## Run locally
 
@@ -57,11 +57,12 @@ Notes:
 
 The copilot picks its synthesis backend at startup (footer + sidebar badge show which):
 
-1. **Claude Code (default when available).** If the `claude` CLI is on PATH — true for anyone already using Claude Code, which Atlas assumes — answers are synthesized by your local, already-authenticated Claude via headless `claude -p`. All tools are disallowed for the call; Claude sees only the retrieval passages Atlas hands it, must quote numbers verbatim, and cites with the passage URLs. Still no API keys and no SDK in this repo — the CLI is the user's own tool.
-2. **Offline extractive (automatic fallback).** No CLI, a timeout, or `ATLAS_COPILOT=extractive` → grounded quote-and-link answers, fully self-contained. The hub never breaks without Claude.
-3. **Custom enterprise gateway (deploy-time).** `ATLAS_COPILOT_ADAPTER="your_pkg.adapter:make_adapter"`, where `make_adapter()` returns an object with `.generate(question, passages, history=None) -> str`. Takes precedence over both modes above.
+1. **Claude Code (default when available).** If the `claude` CLI is on PATH — true for anyone already using Claude Code, which Atlas assumes — answers are synthesized by your local, already-authenticated Claude via headless `claude -p`. All tools are disallowed for the call; Claude sees only the retrieval passages Atlas hands it, must quote numbers verbatim, and cites with the passage URLs. No API keys and no SDK — the CLI is the user's own tool. This is the intended local/testing default.
+2. **Any LLM API (deploy-time, opt-in).** Set `ATLAS_LLM_BASE_URL` (plus `ATLAS_LLM_MODEL`, and `ATLAS_LLM_API_KEY` if the gateway needs one) and the copilot talks OpenAI-compatible `POST {base_url}/chat/completions` — OpenAI, Azure, Gemini's compat endpoint, vLLM, Ollama, LiteLLM, or an enterprise gateway. Stdlib-only (`hub/engine/http_adapter.py`), no vendor SDK; keys live in deploy-time env, never the repo. When configured, this wins over the CLI in `auto` mode; force with `ATLAS_COPILOT=api`.
+3. **Offline extractive (automatic fallback).** No CLI, no API config, a timeout or error mid-answer, or `ATLAS_COPILOT=extractive` → grounded quote-and-link answers, fully self-contained. The hub never breaks without an LLM.
+4. **Custom adapter (escape hatch).** `ATLAS_COPILOT_ADAPTER="your_pkg.adapter:make_adapter"`, where `make_adapter()` returns an object with `.generate(question, passages, history=None) -> str`. Takes precedence over everything above — for backends that don't speak the OpenAI format.
 
-Either way, **retrieval and citations stay Atlas-side** — the backend only writes prose over passages Atlas selected. Knobs: `ATLAS_COPILOT` (`auto`/`claude`/`extractive`), `ATLAS_CLAUDE_MODEL` (optional model override), `ATLAS_COPILOT_TIMEOUT` (seconds, default 90).
+Either way, **retrieval and citations stay Atlas-side** — the backend only writes prose over passages Atlas selected. Knobs: `ATLAS_COPILOT` (`auto`/`claude`/`api`/`extractive`), `ATLAS_CLAUDE_MODEL` (optional model override), `ATLAS_COPILOT_TIMEOUT` (CLI seconds, default 90), `ATLAS_LLM_TIMEOUT` (API seconds, default 60).
 
 ## Content model (OKF)
 

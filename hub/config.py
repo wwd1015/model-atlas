@@ -1,6 +1,8 @@
 """Central configuration for the Atlas hub.
 
-Everything is path- or env-driven; no API keys, no hosted-model calls.
+Everything is path- or env-driven; no keys in the repo — the optional
+hosted-LLM copilot backend is configured entirely via deploy-time env vars
+(ATLAS_LLM_BASE_URL / ATLAS_LLM_API_KEY / ATLAS_LLM_MODEL).
 Override roots with env vars when deploying (e.g. on Posit Connect).
 """
 
@@ -22,10 +24,11 @@ KNOWLEDGE_DOCS_DIR = Path(os.environ.get("ATLAS_KNOWLEDGE_DOCS", ROOT / "knowled
 APP_TITLE = "Atlas"
 APP_TAGLINE = "The team's second brain — onboarding, models, compliance, lessons, tooling."
 
-# Optional copilot LLM adapter, "package.module:factory". Default: None —
-# the copilot runs fully offline (extractive answers with citations).
-# An enterprise gateway adapter can be supplied at deploy time; this repo
-# intentionally ships no key handling and no SDK imports.
+# Optional custom copilot LLM adapter, "package.module:factory" — the escape
+# hatch for backends that don't speak the OpenAI chat-completions format.
+# Most deployments won't need it: the bundled backends (Claude Code CLI,
+# OpenAI-compatible API via ATLAS_LLM_* env vars, extractive fallback) are
+# selected automatically in copilot.load_adapter().
 COPILOT_ADAPTER = os.environ.get("ATLAS_COPILOT_ADAPTER", "")
 
 # Channel registry — single source of truth for navigation and cards.

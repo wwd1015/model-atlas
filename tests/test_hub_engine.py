@@ -212,6 +212,67 @@ def test_claude_prompt_is_grounded():
     assert prompt.rstrip().endswith("what are the PSI thresholds?")
 
 
+def test_load_adapter_prefers_configured_api_over_cli(monkeypatch):
+    import hub.engine.claude_adapter as ca
+
+    monkeypatch.setenv("ATLAS_COPILOT", "auto")
+    monkeypatch.setenv("ATLAS_LLM_BASE_URL", "https://gateway.example/v1")
+    monkeypatch.setenv("ATLAS_LLM_MODEL", "some-model")
+    monkeypatch.setattr(ca, "cli_available", lambda binary="claude": True)
+    adapter = load_adapter()
+    assert adapter is not None and adapter.name == "LLM API · some-model"
+
+
+def test_load_adapter_api_mode_without_config_is_extractive(monkeypatch):
+    monkeypatch.setenv("ATLAS_COPILOT", "api")
+    monkeypatch.delenv("ATLAS_LLM_BASE_URL", raising=False)
+    assert load_adapter() is None
+
+
+def test_http_adapter_request_and_parse(monkeypatch):
+    import json
+
+    import hub.engine.http_adapter as ha
+
+    captured = {}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return json.dumps(
+                {"choices": [{"message": {"content": "  grounded answer  "}}]}
+            ).encode()
+
+    def fake_urlopen(req, timeout=None):
+        captured["url"] = req.full_url
+        captured["auth"] = req.get_header("Authorization")
+        captured["payload"] = json.loads(req.data.decode())
+        return FakeResponse()
+
+    monkeypatch.setattr(ha.urllib.request, "urlopen", fake_urlopen)
+    adapter = ha.OpenAICompatAdapter(base_url="https://gw/v1/", api_key="k", model="m")
+    out = adapter.generate(
+        "what are the PSI thresholds?",
+        [{"title": "Monitoring Plan", "heading": "Thresholds",
+          "url": "/doc/x#thresholds", "text": "PSI < 0.10 stable"}],
+        [("user", "hi"), ("assistant", "hello")],
+    )
+    assert out == "grounded answer"
+    assert captured["url"] == "https://gw/v1/chat/completions"
+    assert captured["auth"] == "Bearer k"
+    assert captured["payload"]["model"] == "m"
+    msgs = captured["payload"]["messages"]
+    assert msgs[0]["role"] == "system" and "ONLY from the context" in msgs[0]["content"]
+    assert [m["role"] for m in msgs[1:3]] == ["user", "assistant"]
+    assert "/doc/x#thresholds" in msgs[-1]["content"]
+    assert msgs[-1]["content"].rstrip().endswith("what are the PSI thresholds?")
+
+
 # -- app routes ---------------------------------------------------------------
 
 def test_app_renders_all_routes():
